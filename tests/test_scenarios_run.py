@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from cvc_policy.scenarios._run import Run
+from cogony_policy.scenarios._run import Run
 
 
 def _write_run(path: Path, events: list[dict], result: dict | None = None) -> None:

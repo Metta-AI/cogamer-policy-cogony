@@ -14,9 +14,9 @@ from unittest.mock import patch
 
 import pytest
 
-from cvc_policy.scenarios import Scenario
-from cvc_policy.scenarios.assertions import AssertResult
-from cvc_policy.scenarios.harness import resolve_mission, run_scenario
+from cogony_policy.scenarios import Scenario
+from cogony_policy.scenarios.assertions import AssertResult
+from cogony_policy.scenarios.harness import resolve_mission, run_scenario
 
 
 def _stub_drive(**kwargs: Any) -> int:
@@ -71,7 +71,7 @@ def test_run_scenario_writes_run_folder(tmp_path: Path) -> None:
         name="my_test", tier=0, mission="machina_1", cogs=2, steps=3,
         assertions=[lambda run: AssertResult(name="dummy", passed=True)],
     )
-    with patch("cvc_policy.scenarios.harness._drive_rollout", side_effect=_stub_drive):
+    with patch("cogony_policy.scenarios.harness._drive_rollout", side_effect=_stub_drive):
         run = run_scenario(s, runs_root=tmp_path)
     assert run.run_dir.parent == tmp_path
     assert (run.run_dir / "events.json").exists()
@@ -89,7 +89,7 @@ def test_run_scenario_status_failed_when_assertion_fails(tmp_path: Path) -> None
             lambda run: AssertResult(name="x", passed=False, message="nope", failed_at_step=2)
         ],
     )
-    with patch("cvc_policy.scenarios.harness._drive_rollout", side_effect=_stub_drive):
+    with patch("cogony_policy.scenarios.harness._drive_rollout", side_effect=_stub_drive):
         run = run_scenario(s, runs_root=tmp_path)
     result = json.loads((run.run_dir / "result.json").read_text())
     assert result["status"] == "failed"
@@ -106,7 +106,7 @@ def test_run_scenario_applies_mission_overrides(tmp_path: Path) -> None:
         name="override_test", tier=0, mission="machina_1", cogs=2, steps=7,
         mission_overrides={"max_steps": 7},
     )
-    with patch("cvc_policy.scenarios.harness._drive_rollout", side_effect=_capture):
+    with patch("cogony_policy.scenarios.harness._drive_rollout", side_effect=_capture):
         run_scenario(s, runs_root=tmp_path)
     assert captured["env"].game.max_steps == 7
 
@@ -127,7 +127,7 @@ def test_run_scenario_runs_setup_hook(tmp_path: Path) -> None:
         assert kwargs["env_cfg"].game.agents[0].inventory.initial.get("miner") == 1
         return _stub_drive(**kwargs)
 
-    with patch("cvc_policy.scenarios.harness._drive_rollout", side_effect=_verify):
+    with patch("cogony_policy.scenarios.harness._drive_rollout", side_effect=_verify):
         run_scenario(s, runs_root=tmp_path)
     assert len(called) == 1
 
@@ -151,7 +151,7 @@ def test_run_scenario_variants_applied(tmp_path: Path) -> None:
         name="variants_test", tier=0, mission="tutorial.miner", cogs=1, steps=3,
         variants=("miner",),
     )
-    with patch("cvc_policy.scenarios.harness._drive_rollout", side_effect=_capture):
+    with patch("cogony_policy.scenarios.harness._drive_rollout", side_effect=_capture):
         run_scenario(s, runs_root=tmp_path)
 
 
@@ -166,7 +166,7 @@ def test_run_scenario_variant_overrides_applied(tmp_path: Path) -> None:
         variants=("miner",),
         variant_overrides={"miner": {"description": "tweaked"}},
     )
-    with patch("cvc_policy.scenarios.harness._drive_rollout", side_effect=_capture):
+    with patch("cogony_policy.scenarios.harness._drive_rollout", side_effect=_capture):
         run_scenario(s, runs_root=tmp_path)
 
 
@@ -175,7 +175,7 @@ def test_run_scenario_rejects_unknown_policy_kwargs(tmp_path: Path) -> None:
         name="bad_kwargs", tier=0, mission="machina_1", cogs=1, steps=3,
         policy_kwargs={"not_a_real_kwarg": 42},
     )
-    with pytest.raises(ValueError, match="unknown CvCPolicy kwarg"):
+    with pytest.raises(ValueError, match="unknown CogonyPolicy kwarg"):
         run_scenario(s, runs_root=tmp_path)
 
 
@@ -185,7 +185,7 @@ def test_run_scenario_renders_report_html(tmp_path: Path) -> None:
         name="render_test", tier=0, mission="machina_1", cogs=2, steps=3,
         assertions=[lambda run: AssertResult(name="dummy", passed=True)],
     )
-    with patch("cvc_policy.scenarios.harness._drive_rollout", side_effect=_stub_drive):
+    with patch("cogony_policy.scenarios.harness._drive_rollout", side_effect=_stub_drive):
         run = run_scenario(s, runs_root=tmp_path)
     report = run.run_dir / "report.html"
     assert report.exists()
@@ -205,8 +205,8 @@ def test_run_scenario_propagates_render_failure(tmp_path: Path) -> None:
     def _boom(_run_dir: Path) -> Path:
         raise _Boom("render exploded")
 
-    with patch("cvc_policy.scenarios.harness._drive_rollout", side_effect=_stub_drive):
-        with patch("cvc_policy.scenarios.harness.render_report", side_effect=_boom):
+    with patch("cogony_policy.scenarios.harness._drive_rollout", side_effect=_stub_drive):
+        with patch("cogony_policy.scenarios.harness.render_report", side_effect=_boom):
             with pytest.raises(_Boom):
                 run_scenario(s, runs_root=tmp_path)
     # result.json was still written before the render step.

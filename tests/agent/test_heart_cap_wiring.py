@@ -3,11 +3,11 @@ GameState alongside the existing cargo-cap tracker."""
 
 from __future__ import annotations
 
-from cvc_policy.agent.heart_cap import HeartCapTracker
+from cogony_policy.agent.heart_cap import HeartCapTracker
 
 
 def test_game_state_has_heart_cap_tracker():
-    from cvc_policy.game_state import GameState
+    from cogony_policy.game_state import GameState
     from tests.conftest import _fake_policy_env_info
 
     gs = GameState(_fake_policy_env_info(), agent_id=0)
@@ -17,7 +17,7 @@ def test_game_state_has_heart_cap_tracker():
 
 def test_game_state_forwards_on_heart_cap_discovery():
     """GameState should plumb on_heart_cap_discovery into the HeartCapTracker."""
-    from cvc_policy.game_state import GameState
+    from cogony_policy.game_state import GameState
     from tests.conftest import _fake_policy_env_info
 
     seen: list[tuple[tuple[str, ...], int]] = []
@@ -36,7 +36,7 @@ def test_game_state_forwards_on_heart_cap_discovery():
 def test_engine_tracks_prev_summary_was_heart_pickup():
     """finalize_step should set _prev_summary_was_heart_pickup based on the
     summary string emitted by the role action."""
-    from cvc_policy.game_state import GameState
+    from cogony_policy.game_state import GameState
     from tests.conftest import _fake_policy_env_info
 
     gs = GameState(_fake_policy_env_info(), agent_id=0)

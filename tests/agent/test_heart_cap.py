@@ -10,7 +10,7 @@ Mirrors the structure of tests/agent/test_cargo_cap.py exactly.
 
 from __future__ import annotations
 
-from cvc_policy.agent.heart_cap import HeartCapTracker
+from cogony_policy.agent.heart_cap import HeartCapTracker
 
 
 # ---------------------------------------------------------------------------

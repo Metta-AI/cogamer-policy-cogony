@@ -1,10 +1,10 @@
 # Architecture
 
-CvCPolicy is a **ProgLet** — a unified program table with two executor types:
+CogonyPolicy is a **ProgLet** — a unified program table with two executor types:
 
 ```
-CvCPolicy (MultiAgentPolicy)
-  └── per-agent CvCPolicyImpl
+CogonyPolicy (MultiAgentPolicy)
+  └── per-agent CogonyPolicyImpl
        └── GameState (wraps CvcEngine)
        └── Program table (programs.py):
             ├── 31 code programs — fast Python functions (decision tree, pathfinding, roles)
@@ -64,7 +64,7 @@ Between these calls, Python runs autonomously using whatever knob values were la
 
 **Program table + policy** (`src/cogamer/cvc/`):
 - `programs.py` — **the 32 programs** (code functions + LLM prompt/parser). Primary evolvable surface
-- `cogamer_policy.py` — CvCPolicy (MultiAgentPolicy), CvCPolicyImpl (per-agent dispatch), LLM executor, experience collection
+- `cogamer_policy.py` — CogonyPolicy (MultiAgentPolicy), CogonyPolicyImpl (per-agent dispatch), LLM executor, experience collection
 - `game_state.py` — GameState adapter wrapping CvcEngine for program table access
 
 **Engine** (`src/cogamer/cvc/agent/`) — infrastructure that programs delegate to:

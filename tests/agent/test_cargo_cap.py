@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import pytest
 
-from cvc_policy.agent.cargo_cap import CargoCapTracker
+from cogony_policy.agent.cargo_cap import CargoCapTracker
 
 
 # ---------------------------------------------------------------------------
@@ -171,7 +171,7 @@ class TestMiningBumpEfficiency:
 
 
 def test_discovery_callback_fires_once_on_new_cap():
-    from cvc_policy.agent.cargo_cap import CargoCapTracker
+    from cogony_policy.agent.cargo_cap import CargoCapTracker
 
     seen: list[tuple[tuple[str, ...], int]] = []
     tracker = CargoCapTracker(on_discovery=lambda sig, cap: seen.append((sig, cap)))
@@ -182,7 +182,7 @@ def test_discovery_callback_fires_once_on_new_cap():
 
 
 def test_discovery_callback_not_refired_on_same_cap():
-    from cvc_policy.agent.cargo_cap import CargoCapTracker
+    from cogony_policy.agent.cargo_cap import CargoCapTracker
 
     seen: list[tuple[tuple[str, ...], int]] = []
     tracker = CargoCapTracker(on_discovery=lambda sig, cap: seen.append((sig, cap)))
@@ -193,7 +193,7 @@ def test_discovery_callback_not_refired_on_same_cap():
 
 def test_game_state_forwards_on_cargo_cap_discovery():
     """GameState should plumb on_cargo_cap_discovery into the CargoCapTracker."""
-    from cvc_policy.game_state import GameState
+    from cogony_policy.game_state import GameState
     from tests.conftest import _fake_policy_env_info
 
     seen: list[tuple[tuple[str, ...], int]] = []

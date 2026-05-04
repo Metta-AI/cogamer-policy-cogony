@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from cvc_policy.overrides import parse_override, parse_variant_override
+from cogony_policy.overrides import parse_override, parse_variant_override
 
 
 def test_parse_override_int() -> None:

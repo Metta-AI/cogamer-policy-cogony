@@ -1,4 +1,4 @@
-# CvC Policy — Diagnostic Framework Design
+# Cogony Policy — Diagnostic Framework Design
 
 **Status:** approved via brainstorming 2026-04-15.
 **Scope:** three workstreams landing together:
@@ -65,7 +65,7 @@ runs/<run_id>/
 
 ## 2. EventRecorder + policy instrumentation
 
-`cvc_policy.recorder.EventRecorder` is the single producer. Replaces
+`cogony_policy.recorder.EventRecorder` is the single producer. Replaces
 the stderr-only `LogConfig`.
 
 ```python
@@ -87,7 +87,7 @@ structured.
 
 ### Instrumentation points
 
-- `CvCPolicyImpl.step_with_state` — `action`, `role_change`, `heartbeat`.
+- `CogonyPolicyImpl.step_with_state` — `action`, `role_change`, `heartbeat`.
 - `GameState.process_obs` / `CargoCapTracker` — `cap_discovered`.
 - `_preferred_miner_extractor` / role action dispatch — `target`.
 - `LLMWorker._dispatch_tool` — `llm_tool_call`.
@@ -105,7 +105,7 @@ structured.
 
 ## 3. Scenario runner (library + `cgp` CLI)
 
-New package `src/cvc_policy/scenarios/`:
+New package `src/cogony_policy/scenarios/`:
 
 ```
 scenarios/
@@ -146,11 +146,11 @@ class Scenario:
 2. Apply `mission_overrides` via `.model_copy(update=...)` on the mission pydantic model.
 3. Apply `variant_overrides` per variant via same.
 4. Run scenario `setup(env)` hook (cell-level tweaks, e.g. `drain_extractor`, `grant_gear`).
-5. Instantiate `CvCPolicy` with `record_dir=runs/<run_id>/` kwarg.
+5. Instantiate `CogonyPolicy` with `record_dir=runs/<run_id>/` kwarg.
 6. Run `Simulation.rollout(steps)`.
 7. Build `Run(run_dir)` and evaluate assertions; write `result.json`.
 
-### `cgp` CLI (top-level console script `cgp = cvc_policy.cli:app`)
+### `cgp` CLI (top-level console script `cgp = cogony_policy.cli:app`)
 
 ```
 cgp scenario list                              # registered scenarios + tier
@@ -199,7 +199,7 @@ Tiers 2 and 3 are deferred (listed in §7).
 
 ## 5. HTML viewer (`cgp view`)
 
-`src/cvc_policy/viewer/` — `render.py` + Jinja2 template `report.html.j2`.
+`src/cogony_policy/viewer/` — `render.py` + Jinja2 template `report.html.j2`.
 
 ### Output
 Single self-contained HTML file; embedded CSS; inline events as
@@ -235,18 +235,18 @@ clickable → jump slider to `failed_at_step` (assertion metadata).
 ## 6. Unit-test coverage audit + gate
 
 - Add `pytest-cov` + `hypothesis` to `dev` dep group.
-- `cgp test-cov` shortcut: `pytest --cov=cvc_policy --cov-report=term-missing --cov-report=xml`.
+- `cgp test-cov` shortcut: `pytest --cov=cogony_policy --cov-report=term-missing --cov-report=xml`.
 
 ### Phase 1 — audit (half day)
 Identify modules under 85% coverage. Known-thin targets:
-`cvc_policy/agent/main.py`, `coglet_policy.py`, `navigation.py`,
-`cvc_policy/game_state.py`, `cvc_policy/llm_worker.py`,
-`cvc_policy/cogamer_policy.py`, new `cvc_policy/recorder.py`.
+`cogony_policy/agent/main.py`, `coglet_policy.py`, `navigation.py`,
+`cogony_policy/game_state.py`, `cogony_policy/llm_worker.py`,
+`cogony_policy/cogamer_policy.py`, new `cogony_policy/recorder.py`.
 Per uncovered line: add a targeted test, or mark `# pragma: no cover`
 with a one-line justification for pure glue / `__repr__`.
 
 ### Phase 2 — CI gate
-`.github/workflows/ci.yml` runs `pytest --cov=cvc_policy --cov-fail-under=85`.
+`.github/workflows/ci.yml` runs `pytest --cov=cogony_policy --cov-fail-under=85`.
 Fails build on backslide.
 
 ### Phase 3 — invariants (stretch)

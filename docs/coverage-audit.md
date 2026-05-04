@@ -3,7 +3,7 @@
 Baseline run:
 
 ```
-.venv/bin/pytest --cov=cvc_policy --cov-report=term-missing --cov-fail-under=0 -q
+.venv/bin/pytest --cov=cogony_policy --cov-report=term-missing --cov-fail-under=0 -q
 ```
 
 Suite: 538 passed, 7 deselected.
@@ -63,7 +63,7 @@ Aggregate: 3065 stmts, 1193 missed, 61% covered.
 Modules: `runtime.py`, `lifelet.py`, `ticklet.py`, `trace.py`, `llm_executor.py`, `coglet.py`, `channel.py`, `handle.py`, `proglet.py`, `setup_policy.py`.
 
 These are a coglet supervision-tree framework left over from earlier iterations
-and never imported from the `CvCPolicy` runtime path. Nothing in the policy
+and never imported from the `CogonyPolicy` runtime path. Nothing in the policy
 actually spawns a `CogletRuntime`; `cogamer_policy.py` uses only
 `proglet.Program` as a duck-type hint.
 

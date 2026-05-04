@@ -1,8 +1,8 @@
-"""Unit tests for pure functions in cvc.agent.coglet_policy."""
+"""Unit tests for pure functions in cogony_policy.agent.coglet_policy."""
 
 from __future__ import annotations
 
-from cvc_policy.agent.coglet_policy import _least_resource, _shared_resources
+from cogony_policy.agent.coglet_policy import _least_resource, _shared_resources
 
 
 class TestSharedResources:

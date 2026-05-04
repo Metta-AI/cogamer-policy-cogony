@@ -1,13 +1,13 @@
-"""Integration tests that drive CvCPolicyImpl.step_with_state with stubbed
+"""Integration tests that drive CogonyPolicyImpl.step_with_state with stubbed
 programs and GameState to verify recorder emissions."""
 
 from __future__ import annotations
 
 from typing import Any
 
-from cvc_policy.cogamer_policy import CvCAgentState, CvCPolicyImpl
-from cvc_policy.programs import Program
-from cvc_policy.recorder import EventRecorder
+from cogony_policy.cogamer_policy import CogonyAgentState, CogonyPolicyImpl
+from cogony_policy.programs import Program
+from cogony_policy.recorder import EventRecorder
 from mettagrid.simulator import Action
 from tests.conftest import _fake_policy_env_info
 
@@ -38,7 +38,7 @@ def _make_impl(
     desired_role: str = "miner",
     summary: str = "mine_carbon",
     action_name: str = "noop",
-) -> tuple[CvCPolicyImpl, CvCAgentState]:
+) -> tuple[CogonyPolicyImpl, CogonyAgentState]:
     recorder = EventRecorder()
     programs = {
         "desired_role": Program(executor="code", fn=lambda gs: desired_role),
@@ -47,14 +47,14 @@ def _make_impl(
         ),
         "summarize": Program(executor="code", fn=lambda gs: {"role": gs.role}),
     }
-    impl = CvCPolicyImpl(
+    impl = CogonyPolicyImpl(
         _fake_policy_env_info(),
         agent_id=0,
         programs=programs,
         llm_client=None,
         recorder=recorder,
     )
-    state = CvCAgentState(game_state=_StubGameState())  # type: ignore[arg-type]
+    state = CogonyAgentState(game_state=_StubGameState())  # type: ignore[arg-type]
     return impl, state
 
 
@@ -221,7 +221,7 @@ def test_inventory_event_omits_team_fields_cleanly_when_unavailable():
 def test_cap_discovered_fires_with_kind_heart_on_aligner_plateau():
     """When the aligner's heart count plateaus after a pickup attempt, a
     `cap_discovered` event with `payload.kind == "heart"` fires via the
-    HeartCapTracker callback plumbed through CvCPolicyImpl."""
+    HeartCapTracker callback plumbed through CogonyPolicyImpl."""
     impl, state = _make_impl()
     # Driving the tracker directly proves the end-to-end wiring: constructor
     # forwards on_heart_cap_discovery → CogletAgentPolicy → HeartCapTracker,
@@ -269,7 +269,7 @@ def test_policyinfos_does_not_leak_across_agents():
             "step": Program(executor="code", fn=lambda gs: (Action("noop"), f"sum{aid}")),
             "summarize": Program(executor="code", fn=lambda gs: {"role": role}),
         }
-        return CvCPolicyImpl(
+        return CogonyPolicyImpl(
             _fake_policy_env_info(),
             agent_id=aid,
             programs=programs,
@@ -279,8 +279,8 @@ def test_policyinfos_does_not_leak_across_agents():
 
     impl0 = mkimpl(0, "miner")
     impl1 = mkimpl(1, "aligner")
-    s0 = CvCAgentState(game_state=_StubGameState())  # type: ignore[arg-type]
-    s1 = CvCAgentState(game_state=_StubGameState())  # type: ignore[arg-type]
+    s0 = CogonyAgentState(game_state=_StubGameState())  # type: ignore[arg-type]
+    s1 = CogonyAgentState(game_state=_StubGameState())  # type: ignore[arg-type]
     impl0.step_with_state(object(), s0)
     impl1.step_with_state(object(), s1)
     assert impl0._infos["role"] == "miner"

@@ -25,13 +25,13 @@ def test_short_game_produces_trace(tmp_path):
     os.makedirs(trace_dir, exist_ok=True)
 
     env = os.environ.copy()
-    env["CVC_TRACE_DIR"] = trace_dir
+    env["COGONY_TRACE_DIR"] = trace_dir
 
     result = subprocess.run(
         [
             "softmax", "cogames", "play",
             "-m", "machina_1",
-            "-p", "class=cvc_policy.cogamer_policy.CvCPolicy",
+            "-p", "class=cogony_policy.cogamer_policy.CogonyPolicy",
             "--render=log",
             "-s", "600",
         ],

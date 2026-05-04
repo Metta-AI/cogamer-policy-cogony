@@ -1,8 +1,8 @@
-"""Tests for cvc.agent.budgets – role assignment, pressure budgets, retreat, and metrics."""
+"""Tests for cogony_policy.agent.budgets – role assignment, pressure budgets, retreat, and metrics."""
 
 from __future__ import annotations
 
-from cvc_policy.agent.budgets import (
+from cogony_policy.agent.budgets import (
     _SCRAMBLER_PRIORITY,
     PressureMetrics,
     assign_role,
@@ -10,7 +10,7 @@ from cvc_policy.agent.budgets import (
     compute_pressure_metrics,
     compute_retreat_margin,
 )
-from cvc_policy.agent.types import JUNCTION_ALIGN_DISTANCE
+from cogony_policy.agent.types import JUNCTION_ALIGN_DISTANCE
 
 # ---------------------------------------------------------------------------
 # assign_role

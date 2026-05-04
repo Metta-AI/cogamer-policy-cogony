@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from cvc_policy.agent.scoring import is_usable_extractor
-from cvc_policy.agent.world_model import WorldModel
+from cogony_policy.agent.scoring import is_usable_extractor
+from cogony_policy.agent.world_model import WorldModel
 
 
 @pytest.fixture

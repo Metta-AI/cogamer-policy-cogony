@@ -1,4 +1,4 @@
-"""Verify that CvCPolicy agents have no shared mutable state.
+"""Verify that CogonyPolicy agents have no shared mutable state.
 
 Each agent must own its own mutable objects (junctions, claims, world model, etc.).
 Sharing mutable state between agents is a bug — this test catches it via id() checks.
@@ -6,7 +6,7 @@ Sharing mutable state between agents is a bug — this test catches it via id() 
 
 from __future__ import annotations
 
-from cvc_policy.cogamer_policy import CvCPolicy
+from cogony_policy.cogamer_policy import CogonyPolicy
 from mettagrid.policy.policy_env_interface import PolicyEnvInterface
 
 
@@ -21,9 +21,9 @@ def _make_policy_env_info() -> PolicyEnvInterface:
 
 
 def test_agents_share_no_mutable_state():
-    """Two agents created by CvCPolicy must not share any mutable objects."""
+    """Two agents created by CogonyPolicy must not share any mutable objects."""
     env_info = _make_policy_env_info()
-    policy = CvCPolicy(env_info, device="cpu")
+    policy = CogonyPolicy(env_info, device="cpu")
 
     wrapper_0 = policy.agent_policy(0)
     wrapper_1 = policy.agent_policy(1)
@@ -46,6 +46,6 @@ def test_agents_share_no_mutable_state():
     # World models must be distinct
     assert id(engine_0._world_model) != id(engine_1._world_model), "agents share _world_model"
 
-    # Mutable collections on CvCAgentState must be distinct
+    # Mutable collections on CogonyAgentState must be distinct
     assert id(state_0.llm_latencies) != id(state_1.llm_latencies), "agents share llm_latencies"
     assert id(state_0.llm_log) != id(state_1.llm_log), "agents share llm_log"

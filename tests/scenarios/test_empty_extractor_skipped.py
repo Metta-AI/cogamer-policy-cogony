@@ -4,9 +4,9 @@ from pathlib import Path
 
 import pytest
 
-import cvc_policy.scenarios.cases.empty_extractor_skipped  # noqa: F401
-from cvc_policy.scenarios import registry
-from cvc_policy.scenarios.harness import run_scenario
+import cogony_policy.scenarios.cases.empty_extractor_skipped  # noqa: F401
+from cogony_policy.scenarios import registry
+from cogony_policy.scenarios.harness import run_scenario
 
 
 @pytest.mark.scenario

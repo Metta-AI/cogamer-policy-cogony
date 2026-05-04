@@ -5,9 +5,9 @@ from __future__ import annotations
 from types import SimpleNamespace
 from typing import Any
 
-from cvc_policy.cogamer_policy import CvCAgentState
-from cvc_policy.llm_worker import LLMWorker, _build_status
-from cvc_policy.recorder import EventRecorder
+from cogony_policy.cogamer_policy import CogonyAgentState
+from cogony_policy.llm_worker import LLMWorker, _build_status
+from cogony_policy.recorder import EventRecorder
 
 
 class _ToolUseBlock(SimpleNamespace):
@@ -50,9 +50,9 @@ class FakeAnthropicClient:
 def _run_worker(client: FakeAnthropicClient, max_iters: int = 10, recorder: EventRecorder | None = None) -> LLMWorker:
     if recorder is None:
         recorder = EventRecorder()
-    state = CvCAgentState()
+    state = CogonyAgentState()
     worker = LLMWorker(client, agent_id=0, state=state, recorder=recorder)
-    from cvc_policy import llm_worker as lw
+    from cogony_policy import llm_worker as lw
     orig = lw._STATUS_COOLDOWN_S
     lw._STATUS_COOLDOWN_S = 0.0
     try:
@@ -102,7 +102,7 @@ def test_get_status_returns_dashboard():
 
 def test_trim_history_never_starts_with_assistant():
     client = FakeAnthropicClient()
-    state = CvCAgentState()
+    state = CogonyAgentState()
     worker = LLMWorker(client, agent_id=0, state=state)
     initial = [{"role": "user", "content": "grounding"}]
     msgs = list(initial)
@@ -136,7 +136,7 @@ def test_trim_history_never_starts_with_assistant():
 
 def test_patch_tool_role_and_objective():
     client = FakeAnthropicClient()
-    state = CvCAgentState()
+    state = CogonyAgentState()
     worker = LLMWorker(client, agent_id=0, state=state)
     out = worker._tool_patch(
         {"role": "scrambler", "objective": "expand", "rationale": "push"}
@@ -150,7 +150,7 @@ def test_patch_tool_role_and_objective():
 
 def test_dispatch_unknown_tool():
     client = FakeAnthropicClient()
-    state = CvCAgentState()
+    state = CogonyAgentState()
     worker = LLMWorker(client, agent_id=0, state=state)
     out = worker._dispatch_tool("nope", {})
     assert "error" in out
@@ -159,7 +159,7 @@ def test_dispatch_unknown_tool():
 def test_stop_joins_thread():
     client = FakeAnthropicClient()
     client.queue_end_turn()
-    state = CvCAgentState()
+    state = CogonyAgentState()
     worker = LLMWorker(client, agent_id=0, state=state)
     worker.start()
     worker.stop(timeout=2.0)
@@ -168,7 +168,7 @@ def test_stop_joins_thread():
 
 def test_trim_history_short_messages_unchanged():
     client = FakeAnthropicClient()
-    state = CvCAgentState()
+    state = CogonyAgentState()
     worker = LLMWorker(client, agent_id=0, state=state)
     msgs = [{"role": "user", "content": "g"}, {"role": "assistant", "content": "a"}]
     out = worker._trim_history(msgs)
@@ -207,7 +207,7 @@ def test_world_model_skips_territory_observation_attrs():
             "energy": 80,
         },
     )
-    state = CvCAgentState(
+    state = CogonyAgentState(
         game_state=SimpleNamespace(
             world_model=SimpleNamespace(entities=lambda: [entity])
         )

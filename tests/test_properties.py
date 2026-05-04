@@ -7,10 +7,10 @@ from __future__ import annotations
 
 from hypothesis import given, settings, strategies as st
 
-from cvc_policy.agent.cargo_cap import CargoCapTracker
-from cvc_policy.agent.resources import resource_priority
-from cvc_policy.agent.scoring import scramble_target_score
-from cvc_policy.agent.types import ELEMENTS, KnownEntity
+from cogony_policy.agent.cargo_cap import CargoCapTracker
+from cogony_policy.agent.resources import resource_priority
+from cogony_policy.agent.scoring import scramble_target_score
+from cogony_policy.agent.types import ELEMENTS, KnownEntity
 from mettagrid.sdk.agent import (
     GridPosition,
     MettagridState,

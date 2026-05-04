@@ -1,4 +1,4 @@
-from cvc_policy.recorder import EventRecorder, fmt
+from cogony_policy.recorder import EventRecorder, fmt
 
 
 def test_emit_appends_event_with_step_and_stream():

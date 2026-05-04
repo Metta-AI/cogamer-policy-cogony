@@ -20,7 +20,7 @@ def test_llm_response_parses_successfully():
     """Send the actual prompt to the LLM and confirm _parse_analysis extracts fields."""
     import anthropic
 
-    from cvc_policy.programs import _build_analysis_prompt, _parse_analysis
+    from cogony_policy.programs import _build_analysis_prompt, _parse_analysis
 
     ctx = {
         "step": 500,

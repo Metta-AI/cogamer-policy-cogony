@@ -10,7 +10,7 @@ Play a game and check the "per cog" score:
 
 ```bash
 softmax cogames play -m machina_1 \
-  -p class=cvc_policy.cogamer_policy.CvCPolicy \
+  -p class=cogony_policy.cogamer_policy.CogonyPolicy \
   -c 8 --render=none --seed 42
 ```
 
@@ -19,7 +19,7 @@ softmax cogames play -m machina_1 \
 Without LLM (matches tournament conditions):
 ```bash
 ANTHROPIC_API_KEY= softmax cogames play -m machina_1 \
-  -p class=cvc_policy.cogamer_policy.CvCPolicy \
+  -p class=cogony_policy.cogamer_policy.CogonyPolicy \
   -c 8 --render=none --seed 42
 ```
 
@@ -35,7 +35,7 @@ Upload a policy to a season. The policy name (`-n`) **MUST start with your cogam
 
 ```bash
 cd src/cogamer && PYTHONPATH=. cogames upload \
-  -p class=cvc.cogamer_policy.CvCPolicy \
+  -p class=cvc.cogamer_policy.CogonyPolicy \
   -n <cogamer-name> \
   -f cvc -f setup_policy.py \
   --setup-script setup_policy.py \
@@ -52,7 +52,7 @@ Always test locally across 5+ seeds before uploading:
 ```bash
 for seed in 42 43 44 45 46; do
   ANTHROPIC_API_KEY= softmax cogames play -m machina_1 \
-    -p class=cvc_policy.cogamer_policy.CvCPolicy \
+    -p class=cogony_policy.cogamer_policy.CogonyPolicy \
     -c 8 --render=none --seed $seed
 done
 ```

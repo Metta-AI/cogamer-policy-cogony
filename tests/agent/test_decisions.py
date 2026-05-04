@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock
 
-from cvc_policy.agent.decisions import (
+from cogony_policy.agent.decisions import (
     DECISION_PIPELINE,
     check_early_retreat,
     check_emergency_mine,
@@ -17,8 +17,8 @@ from cvc_policy.agent.decisions import (
     dispatch_role_action,
     run_pipeline,
 )
-from cvc_policy.agent.tick_context import TickContext
-from cvc_policy.agent.types import KnownEntity
+from cogony_policy.agent.tick_context import TickContext
+from cogony_policy.agent.types import KnownEntity
 
 
 def _make_hub(x=44, y=44):

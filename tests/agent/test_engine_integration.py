@@ -11,8 +11,8 @@ from typing import Any
 
 import pytest
 
-from cvc_policy.agent.types import KnownEntity
-from cvc_policy.game_state import GameState
+from cogony_policy.agent.types import KnownEntity
+from cogony_policy.game_state import GameState
 from mettagrid.policy.policy_env_interface import PolicyEnvInterface
 from mettagrid.sdk.agent import (
     GridPosition,
@@ -442,7 +442,7 @@ def test_best_scramble_target_picks_near_friendly(gs: GameState) -> None:
 
 
 def test_cargo_cap_observed_via_process_obs() -> None:
-    from cvc_policy.game_state import GameState
+    from cogony_policy.game_state import GameState
 
     gs = GameState(_env_info(), agent_id=0)
     # Set prev mine flag
@@ -470,7 +470,7 @@ def test_cargo_cap_observed_via_process_obs() -> None:
 
 
 def test_program_table_lookup() -> None:
-    from cvc_policy import programs
+    from cogony_policy import programs
 
     table = programs.all_programs()
     assert isinstance(table, dict)
@@ -484,7 +484,7 @@ def test_program_table_lookup() -> None:
 
 
 def test_all_code_programs_callable(gs: GameState) -> None:
-    from cvc_policy import programs as P
+    from cogony_policy import programs as P
 
     hub = _semantic("hub", 50, 50, team="team_0", owner="team_0")
     ext = _semantic("carbon_extractor", 52, 50, carbon=5)
@@ -559,7 +559,7 @@ def test_all_code_programs_callable(gs: GameState) -> None:
 
 
 def test_should_retreat_low_hp_far_from_hub(gs: GameState) -> None:
-    from cvc_policy import programs as P
+    from cogony_policy import programs as P
 
     hub = _semantic("hub", 0, 0, team="team_0", owner="team_0")
     state = _build_state(x=30, y=0, hp=50, visible=[hub], inventory={"miner": 1})
@@ -569,7 +569,7 @@ def test_should_retreat_low_hp_far_from_hub(gs: GameState) -> None:
 
 
 def test_retreat_no_hub_holds(gs: GameState) -> None:
-    from cvc_policy import programs as P
+    from cogony_policy import programs as P
 
     # No hub visible, no bootstrap (role_id=0 has offset (0,3), so bootstrap
     # IS returned). Use role_id=10 which has no bootstrap — but we're at
@@ -592,7 +592,7 @@ def test_retreat_no_hub_holds(gs: GameState) -> None:
 
 
 def test_parse_analysis_variants() -> None:
-    from cvc_policy.programs import _parse_analysis
+    from cogony_policy.programs import _parse_analysis
 
     # Plain JSON
     out = _parse_analysis(
@@ -624,7 +624,7 @@ def test_parse_analysis_variants() -> None:
 
 
 def test_build_analysis_prompt_has_keys() -> None:
-    from cvc_policy.programs import _build_analysis_prompt, _team_resources
+    from cogony_policy.programs import _build_analysis_prompt, _team_resources
 
     class DummyGS:
         step_index = 1

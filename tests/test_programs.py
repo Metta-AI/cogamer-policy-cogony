@@ -1,4 +1,4 @@
-"""Unit tests for pure functions in cvc.programs: _build_analysis_prompt and _parse_analysis."""
+"""Unit tests for pure functions in cogony_policy.programs: _build_analysis_prompt and _parse_analysis."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from cvc_policy.programs import _build_analysis_prompt, _parse_analysis
+from cogony_policy.programs import _build_analysis_prompt, _parse_analysis
 
 # ---------------------------------------------------------------------------
 # Helpers

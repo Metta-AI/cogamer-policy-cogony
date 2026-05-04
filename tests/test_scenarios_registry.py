@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import pytest
 
-from cvc_policy.scenarios import Scenario, registry, scenario
+from cogony_policy.scenarios import Scenario, registry, scenario
 
 
 @pytest.fixture(autouse=True)
 def _clear_registry():
-    from cvc_policy.scenarios import _REGISTRY
+    from cogony_policy.scenarios import _REGISTRY
 
     before = dict(_REGISTRY)
     _REGISTRY.clear()

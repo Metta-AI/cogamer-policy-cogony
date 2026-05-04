@@ -1,8 +1,8 @@
-"""Tests for cvc.agent.scoring functions."""
+"""Tests for cogony_policy.agent.scoring functions."""
 
 from __future__ import annotations
 
-from cvc_policy.agent.scoring import (
+from cogony_policy.agent.scoring import (
     aligner_target_score,
     is_usable_extractor,
     scramble_target_score,
@@ -10,7 +10,7 @@ from cvc_policy.agent.scoring import (
     teammate_closer_to_target,
     within_alignment_network,
 )
-from cvc_policy.agent.types import (
+from cogony_policy.agent.types import (
     HUB_ALIGN_DISTANCE,
     JUNCTION_ALIGN_DISTANCE,
     JUNCTION_AOE_RANGE,

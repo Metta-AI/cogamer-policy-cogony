@@ -58,7 +58,7 @@ def _write_fake_run(
 
 
 def test_render_writes_report_html_non_empty(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "fake-run")
     out = render(run_dir)
@@ -68,7 +68,7 @@ def test_render_writes_report_html_non_empty(tmp_path: Path) -> None:
 
 
 def test_report_contains_run_id_and_scenario(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(
         tmp_path / "r", run_id="my-run-id-123", scenario="my_scenario"
@@ -79,7 +79,7 @@ def test_report_contains_run_id_and_scenario(tmp_path: Path) -> None:
 
 
 def test_report_has_no_timeline_svgs(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "r", cogs=3)
     html = render(run_dir).read_text()
@@ -89,7 +89,7 @@ def test_report_has_no_timeline_svgs(tmp_path: Path) -> None:
 
 
 def test_report_main_has_replay_handle_log_columns(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "r", cogs=3)
     html = render(run_dir).read_text()
@@ -103,7 +103,7 @@ def test_report_main_has_replay_handle_log_columns(tmp_path: Path) -> None:
 def test_report_layout_fills_viewport_height(tmp_path: Path) -> None:
     """Body/main/section use flex column + grow so the page fills the
     viewport vertically and regressions to fixed heights fail tests."""
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "r", cogs=2)
     html = render(run_dir).read_text()
@@ -137,7 +137,7 @@ def test_report_layout_fills_viewport_height(tmp_path: Path) -> None:
 
 
 def test_report_embeds_events_json_blob(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     events = [
         {"step": 0, "agent": 0, "stream": "py", "type": "action",
@@ -158,7 +158,7 @@ def test_report_embeds_events_json_blob(tmp_path: Path) -> None:
 
 
 def test_report_failure_view_shows_failed_assertion(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(
         tmp_path / "r",
@@ -175,7 +175,7 @@ def test_report_failure_view_shows_failed_assertion(tmp_path: Path) -> None:
 
 
 def test_report_tick_has_data_attrs(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     events = [
         {"step": 7, "agent": 0, "stream": "py", "type": "action",
@@ -192,7 +192,7 @@ def test_report_tick_has_data_attrs(tmp_path: Path) -> None:
 def test_report_replay_card_present_when_replay_file_exists(
     tmp_path: Path,
 ) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "my-run")
     (run_dir / "replay.json.z").write_bytes(b"fake")
@@ -202,7 +202,7 @@ def test_report_replay_card_present_when_replay_file_exists(
 
 
 def test_render_includes_compact_copy_badge(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "my-run")
     (run_dir / "replay.json.z").write_bytes(b"fake")
@@ -211,7 +211,7 @@ def test_render_includes_compact_copy_badge(tmp_path: Path) -> None:
 
 
 def test_report_replay_copy_badge_uses_absolute_path(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "my-run")
     (run_dir / "replay.json.z").write_bytes(b"fake")
@@ -226,7 +226,7 @@ def test_report_replay_copy_badge_uses_absolute_path(tmp_path: Path) -> None:
 
 def test_report_replay_cmd_is_header_button(tmp_path: Path) -> None:
     """Replay cmd lives as a compact button inside <header>, not a full-width row."""
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "my-run")
     (run_dir / "replay.json.z").write_bytes(b"fake")
@@ -243,7 +243,7 @@ def test_report_replay_cmd_is_header_button(tmp_path: Path) -> None:
 
 
 def test_render_includes_mettascope_iframe(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "my-run")
     (run_dir / "replay.json.z").write_bytes(b"fake")
@@ -257,7 +257,7 @@ def test_render_includes_mettascope_iframe(tmp_path: Path) -> None:
 
 
 def test_render_iframe_prefers_local_mettascope_on_http(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "r")
     (run_dir / "replay.json.z").write_bytes(b"fake")
@@ -272,7 +272,7 @@ def test_render_iframe_prefers_local_mettascope_on_http(tmp_path: Path) -> None:
 
 def test_report_scrubber_pushes_step_to_mettascope_iframe(tmp_path: Path) -> None:
     """setStep posts mettascopeSetStep to the iframe contentWindow."""
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "r")
     (run_dir / "replay.json.z").write_bytes(b"fake")
@@ -288,7 +288,7 @@ def test_report_listens_for_mettascope_step_with_source_check(
     tmp_path: Path,
 ) -> None:
     """Inbound mettascopeStep handler is wired and verifies event.source."""
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "r")
     (run_dir / "replay.json.z").write_bytes(b"fake")
@@ -304,7 +304,7 @@ def test_report_guards_against_mettascope_step_feedback_loop(
     tmp_path: Path,
 ) -> None:
     """The inbound handler must suppress the outbound push to avoid a loop."""
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "r")
     (run_dir / "replay.json.z").write_bytes(b"fake")
@@ -316,7 +316,7 @@ def test_report_guards_against_mettascope_step_feedback_loop(
 
 
 def test_render_neutralizes_script_end_in_json_island(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(
         tmp_path / "r",
@@ -343,7 +343,7 @@ def test_render_neutralizes_script_end_in_json_island(tmp_path: Path) -> None:
 
 
 def test_render_escapes_event_text_in_log_panel(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(
         tmp_path / "r",
@@ -358,7 +358,7 @@ def test_render_escapes_event_text_in_log_panel(tmp_path: Path) -> None:
 
 
 def test_render_escapes_assertion_message(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(
         tmp_path / "r",
@@ -377,7 +377,7 @@ def test_render_escapes_assertion_message(tmp_path: Path) -> None:
 
 
 def test_report_has_no_standalone_filter_bar(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "r", cogs=3)
     html = render(run_dir).read_text()
@@ -387,7 +387,7 @@ def test_report_has_no_standalone_filter_bar(tmp_path: Path) -> None:
 
 
 def test_agent_filters_live_in_log_panel(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "r", cogs=3)
     html = render(run_dir).read_text()
@@ -409,7 +409,7 @@ def test_agent_filters_live_in_log_panel(tmp_path: Path) -> None:
 
 def test_agent_checkboxes_total_count_matches_cogs(tmp_path: Path) -> None:
     """Exactly `cogs` agent checkboxes in the whole report, not duplicated."""
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "r", cogs=4)
     html = render(run_dir).read_text()
@@ -419,7 +419,7 @@ def test_agent_checkboxes_total_count_matches_cogs(tmp_path: Path) -> None:
 
 def test_group_by_step_dense_has_no_ranges() -> None:
     """Every step has ≥ 1 event: no range groups."""
-    from cvc_policy.viewer.render import _group_by_step
+    from cogony_policy.viewer.render import _group_by_step
 
     events = [
         {"step": 0, "type": "a"},
@@ -433,7 +433,7 @@ def test_group_by_step_dense_has_no_ranges() -> None:
 
 def test_group_by_step_collapses_multi_empty_gap() -> None:
     """A gap of ≥ 2 consecutive empty steps becomes one range group."""
-    from cvc_policy.viewer.render import _group_by_step
+    from cogony_policy.viewer.render import _group_by_step
 
     # events at steps 12, 13, and 200. Everything in 14..199 is empty.
     events = [
@@ -455,7 +455,7 @@ def test_group_by_step_collapses_multi_empty_gap() -> None:
 
 def test_group_by_step_single_gap_not_collapsed() -> None:
     """A single empty step stays as a step group (no range)."""
-    from cvc_policy.viewer.render import _group_by_step
+    from cogony_policy.viewer.render import _group_by_step
 
     events = [
         {"step": 0, "type": "a"},
@@ -472,14 +472,14 @@ def test_group_by_step_single_gap_not_collapsed() -> None:
 
 def test_group_by_step_no_events_single_range() -> None:
     """No events: one range [0-max_step] spanning the whole run."""
-    from cvc_policy.viewer.render import _group_by_step
+    from cogony_policy.viewer.render import _group_by_step
 
     groups = _group_by_step([], max_step=99)
     assert groups == [{"type": "range", "start": 0, "end": 99}]
 
 
 def test_group_by_step_events_on_step_zero() -> None:
-    from cvc_policy.viewer.render import _group_by_step
+    from cogony_policy.viewer.render import _group_by_step
 
     events = [{"step": 0, "type": "a"}, {"step": 0, "type": "b"}]
     groups = _group_by_step(events, max_step=0)
@@ -491,7 +491,7 @@ def test_group_by_step_events_on_step_zero() -> None:
 
 def test_group_by_step_trailing_empty_range() -> None:
     """Empty tail past the last event still produces a range marker."""
-    from cvc_policy.viewer.render import _group_by_step
+    from cogony_policy.viewer.render import _group_by_step
 
     events = [{"step": 0, "type": "a"}]
     groups = _group_by_step(events, max_step=10)
@@ -502,7 +502,7 @@ def test_group_by_step_trailing_empty_range() -> None:
 
 def test_render_sparse_events_no_step_range(tmp_path: Path) -> None:
     """Step-range gaps are no longer emitted."""
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     events = [
         {"step": 0, "agent": 0, "stream": "py", "type": "action", "payload": {}},
@@ -515,7 +515,7 @@ def test_render_sparse_events_no_step_range(tmp_path: Path) -> None:
 
 def test_render_dense_events_no_step_range(tmp_path: Path) -> None:
     """Every step has events: zero step-range elements."""
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     events = [
         {"step": i, "agent": 0, "stream": "py", "type": "action",
@@ -536,7 +536,7 @@ def test_render_dense_events_no_step_range(tmp_path: Path) -> None:
 
 def test_render_no_step_range_attrs(tmp_path: Path) -> None:
     """Step-range gaps are no longer emitted."""
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     events = [
         {"step": 5, "agent": 0, "stream": "py", "type": "action", "payload": {}},
@@ -548,7 +548,7 @@ def test_render_no_step_range_attrs(tmp_path: Path) -> None:
 
 
 def test_log_has_step_separators_between_distinct_steps(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     events = [
         {"step": 0, "agent": 0, "stream": "py", "type": "action",
@@ -570,7 +570,7 @@ def test_log_has_step_separators_between_distinct_steps(tmp_path: Path) -> None:
 
 
 def test_log_colors_lines_by_stream(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     events = [
         {"step": 0, "agent": 0, "stream": "py", "type": "action",
@@ -596,7 +596,7 @@ def test_log_colors_lines_by_stream(tmp_path: Path) -> None:
 
 
 def test_log_uses_per_agent_colors(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     events = [
         {"step": 0, "agent": 0, "stream": "py", "type": "action",
@@ -620,7 +620,7 @@ def test_log_uses_per_agent_colors(tmp_path: Path) -> None:
 
 
 def test_payload_text_helper_strips_stream_and_agent_prefix() -> None:
-    from cvc_policy.recorder import payload_text
+    from cogony_policy.recorder import payload_text
 
     ev = {"step": 7, "agent": 2, "stream": "py", "type": "target",
           "payload": {"kind": "carbon_extractor", "pos": [1, 1]}}
@@ -637,7 +637,7 @@ def test_payload_text_helper_strips_stream_and_agent_prefix() -> None:
 def test_cgp_view_rejects_path_traversal(tmp_path: Path) -> None:
     from typer.testing import CliRunner
 
-    from cvc_policy.cli import app
+    from cogony_policy.cli import app
 
     runs_root = tmp_path / "runs"
     runs_root.mkdir()
@@ -659,7 +659,7 @@ def test_cgp_view_no_server_opens_file_url(
 ) -> None:
     from typer.testing import CliRunner
 
-    from cvc_policy.cli import app
+    from cogony_policy.cli import app
 
     runs_root = tmp_path / "runs"
     _write_fake_run(runs_root / "abc-20260101-000000", run_id="abc")
@@ -697,7 +697,7 @@ def test_cgp_view_with_server_starts_http_server(
 
     from typer.testing import CliRunner
 
-    from cvc_policy.cli import app
+    from cogony_policy.cli import app
 
     # Use a random port so tests don't collide with the user's viewer.
     monkeypatch.delenv("CMUX_PORT", raising=False)
@@ -747,8 +747,8 @@ def test_serve_run_mounts_mettascope_dist_when_available(
     """GET /mettascope/mettascope.html returns 200 when dist is found."""
     import urllib.request
 
-    from cvc_policy import cli as cli_mod
-    from cvc_policy.viewer import render
+    from cogony_policy import cli as cli_mod
+    from cogony_policy.viewer import render
 
     runs_root = tmp_path / "runs"
     run_dir = _write_fake_run(runs_root / "abc-20260101-000000", run_id="abc")
@@ -784,8 +784,8 @@ def test_serve_run_still_serves_run_dir_when_mettascope_missing(
     """With no dist, run-dir paths still serve and COOP/COEP headers present."""
     import urllib.request
 
-    from cvc_policy import cli as cli_mod
-    from cvc_policy.viewer import render
+    from cogony_policy import cli as cli_mod
+    from cogony_policy.viewer import render
 
     runs_root = tmp_path / "runs"
     run_dir = _write_fake_run(runs_root / "abc-20260101-000000", run_id="abc")
@@ -810,8 +810,8 @@ def test_serve_run_helper_actually_serves_report(tmp_path: Path) -> None:
     """The _serve_run helper returns a live server that serves report.html."""
     import urllib.request
 
-    from cvc_policy.cli import _serve_run
-    from cvc_policy.viewer import render
+    from cogony_policy.cli import _serve_run
+    from cogony_policy.viewer import render
 
     runs_root = tmp_path / "runs"
     run_dir = _write_fake_run(runs_root / "abc-20260101-000000", run_id="abc")
@@ -834,7 +834,7 @@ def test_cgp_runs_lists_most_recent_first(
 ) -> None:
     from typer.testing import CliRunner
 
-    from cvc_policy.cli import app
+    from cogony_policy.cli import app
 
     runs_root = tmp_path / "runs"
     _write_fake_run(runs_root / "old-20260101-000000", run_id="old",
@@ -861,7 +861,7 @@ def test_mettascope_dist_uses_env_var_when_set(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """CVC_METTASCOPE_DIST wins over all other probes when it contains mettascope.html."""
-    from cvc_policy import cli as cli_mod
+    from cogony_policy import cli as cli_mod
 
     dist = tmp_path / "custom-dist"
     dist.mkdir()
@@ -886,7 +886,7 @@ def test_mettascope_dist_falls_through_env_var_if_unset(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """Unset CVC_METTASCOPE_DIST means no env-var match; later probes run."""
-    from cvc_policy import cli as cli_mod
+    from cogony_policy import cli as cli_mod
 
     monkeypatch.delenv("CVC_METTASCOPE_DIST", raising=False)
 
@@ -915,7 +915,7 @@ def test_mettascope_dist_env_var_invalid_dir_ignored(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """Env var pointing at a dir without mettascope.html is skipped."""
-    from cvc_policy import cli as cli_mod
+    from cogony_policy import cli as cli_mod
 
     bad = tmp_path / "no-html-here"
     bad.mkdir()
@@ -936,7 +936,7 @@ def test_mettascope_home_glob_finds_sibling_checkout(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """_mettascope_home_glob_dists() returns dirs matched by ~/code/metta*/.../dist."""
-    from cvc_policy import cli as cli_mod
+    from cogony_policy import cli as cli_mod
 
     fake_home_code = tmp_path / "code"
     dist = (
@@ -962,7 +962,7 @@ def test_render_iframe_shows_error_panel_when_both_sources_fail(
     tmp_path: Path,
 ) -> None:
     """JS falls back to an in-page error panel when github.io HEAD also fails."""
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "my-run")
     (run_dir / "replay.json.z").write_bytes(b"fake")
@@ -988,7 +988,7 @@ def _dup_event(step: int, *, role: str = "miner", summary: str = "mine_carbon") 
 
 def test_merge_duplicate_consecutive_steps_into_run() -> None:
     """Adjacent steps with one identical event each collapse to one run."""
-    from cvc_policy.viewer.render import _group_by_step, _merge_duplicate_steps
+    from cogony_policy.viewer.render import _group_by_step, _merge_duplicate_steps
 
     events = [_dup_event(s) for s in (5, 6, 7, 8)]
     groups = _group_by_step(events, max_step=10)
@@ -1005,7 +1005,7 @@ def test_merge_duplicate_consecutive_steps_into_run() -> None:
 
 def test_no_merge_across_gap() -> None:
     """Identical events at steps 5 and 7 with empty step 6 stay separate."""
-    from cvc_policy.viewer.render import _group_by_step, _merge_duplicate_steps
+    from cogony_policy.viewer.render import _group_by_step, _merge_duplicate_steps
 
     events = [_dup_event(5), _dup_event(7)]
     groups = _group_by_step(events, max_step=7)
@@ -1022,7 +1022,7 @@ def test_no_merge_across_gap() -> None:
 
 def test_no_merge_across_range() -> None:
     """A ``range`` group between populated steps blocks merging."""
-    from cvc_policy.viewer.render import _group_by_step, _merge_duplicate_steps
+    from cogony_policy.viewer.render import _group_by_step, _merge_duplicate_steps
 
     events = [_dup_event(0), _dup_event(100)]
     groups = _group_by_step(events, max_step=100)
@@ -1036,7 +1036,7 @@ def test_no_merge_across_range() -> None:
 
 def test_no_merge_when_multiple_events_on_a_step() -> None:
     """Merging only applies when both sides have exactly one event."""
-    from cvc_policy.viewer.render import _group_by_step, _merge_duplicate_steps
+    from cogony_policy.viewer.render import _group_by_step, _merge_duplicate_steps
 
     events = [
         _dup_event(5),
@@ -1055,7 +1055,7 @@ def test_no_merge_when_multiple_events_on_a_step() -> None:
 
 def test_no_merge_when_payload_differs() -> None:
     """Different summaries should not merge."""
-    from cvc_policy.viewer.render import _group_by_step, _merge_duplicate_steps
+    from cogony_policy.viewer.render import _group_by_step, _merge_duplicate_steps
 
     events = [
         _dup_event(5, summary="mine_carbon"),
@@ -1071,7 +1071,7 @@ def test_no_merge_when_payload_differs() -> None:
 
 def test_no_merge_when_type_differs() -> None:
     """Different event types with same payload_text should not merge."""
-    from cvc_policy.viewer.render import _group_by_step, _merge_duplicate_steps
+    from cogony_policy.viewer.render import _group_by_step, _merge_duplicate_steps
 
     events = [
         {"step": 5, "agent": 0, "stream": "py", "type": "action",
@@ -1089,7 +1089,7 @@ def test_no_merge_when_type_differs() -> None:
 
 def test_merge_ignores_varying_latency() -> None:
     """payload_text strips volatile fields — merge still fires."""
-    from cvc_policy.viewer.render import _group_by_step, _merge_duplicate_steps
+    from cogony_policy.viewer.render import _group_by_step, _merge_duplicate_steps
 
     events = [
         {"step": 5, "agent": 0, "stream": "llm", "type": "llm_tool_call",
@@ -1103,7 +1103,7 @@ def test_merge_ignores_varying_latency() -> None:
     step_groups = [g for g in merged if g["type"] == "step"]
     # If payload_text strips latency_ms these merge; if not, they stay
     # separate. Check whichever the recorder says.
-    from cvc_policy.recorder import payload_text
+    from cogony_policy.recorder import payload_text
     a = payload_text(events[0])
     b = payload_text(events[1])
     if a == b:
@@ -1115,7 +1115,7 @@ def test_merge_ignores_varying_latency() -> None:
 
 def test_render_emits_one_step_marker_per_step_not_pre_merged(tmp_path: Path) -> None:
     """Duplicate-merging is client-side now; render emits one marker per step."""
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     events = [_dup_event(s) for s in range(10)]
     run_dir = _write_fake_run(tmp_path / "r", cogs=1, events=events, steps=9)
@@ -1130,7 +1130,7 @@ def test_render_emits_one_step_marker_per_step_not_pre_merged(tmp_path: Path) ->
 
 def test_render_lines_have_data_payload_for_js_merging(tmp_path: Path) -> None:
     """Each .line carries data-payload so client JS can test equality."""
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     events = [_dup_event(s) for s in range(3)]
     run_dir = _write_fake_run(tmp_path / "r", cogs=1, events=events, steps=2)
@@ -1148,7 +1148,7 @@ def test_render_lines_have_data_payload_for_js_merging(tmp_path: Path) -> None:
 
 def test_render_includes_recompute_merges_js(tmp_path: Path) -> None:
     """The client-side merge function exists in the generated JS."""
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "r", cogs=1, events=[], steps=0)
     html = render(run_dir).read_text()
@@ -1159,7 +1159,7 @@ def test_render_includes_recompute_merges_js(tmp_path: Path) -> None:
 
 def test_render_click_handler_jumps_scrubber_to_step(tmp_path: Path) -> None:
     """Clicking a .line or .step-marker jumps the scrubber to that step."""
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "r", cogs=1, events=[], steps=0)
     html = render(run_dir).read_text()
@@ -1192,7 +1192,7 @@ def _find_line_block(html: str, idx: int) -> str:
 
 
 def test_role_glyph_helper_maps_known_roles() -> None:
-    from cvc_policy.viewer.render import role_glyph
+    from cogony_policy.viewer.render import role_glyph
 
     assert role_glyph("miner") == "\u26cf"        # pickaxe
     assert role_glyph("aligner") == "\U0001f517"  # link
@@ -1204,7 +1204,7 @@ def test_role_glyph_helper_maps_known_roles() -> None:
 
 
 def test_action_event_renders_role_icon_inline(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     events = [
         {"step": 0, "agent": 0, "stream": "py", "type": "action",
@@ -1220,7 +1220,7 @@ def test_action_event_renders_role_icon_inline(tmp_path: Path) -> None:
 
 
 def test_non_action_event_inherits_prior_role(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     events = [
         {"step": 0, "agent": 0, "stream": "py", "type": "action",
@@ -1238,7 +1238,7 @@ def test_non_action_event_inherits_prior_role(tmp_path: Path) -> None:
 
 
 def test_team_event_has_no_role_icon(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     events = [
         {"step": 0, "agent": 0, "stream": "py", "type": "action",
@@ -1254,7 +1254,7 @@ def test_team_event_has_no_role_icon(tmp_path: Path) -> None:
 
 
 def test_role_icon_css_present(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "r", cogs=1)
     html = render(run_dir).read_text()
@@ -1262,7 +1262,7 @@ def test_role_icon_css_present(tmp_path: Path) -> None:
 
 
 def test_unknown_role_is_ignored(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     events = [
         {"step": 0, "agent": 0, "stream": "py", "type": "action",
@@ -1281,7 +1281,7 @@ def test_unknown_role_is_ignored(tmp_path: Path) -> None:
 
 
 def test_inventory_panel_exists_with_one_row_per_agent(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "r", cogs=3)
     html = render(run_dir).read_text()
@@ -1291,8 +1291,8 @@ def test_inventory_panel_exists_with_one_row_per_agent(tmp_path: Path) -> None:
 
 
 def test_inventory_panel_uses_agent_color(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
-    from cvc_policy.viewer.render import agent_color
+    from cogony_policy.viewer import render
+    from cogony_policy.viewer.render import agent_color
 
     run_dir = _write_fake_run(tmp_path / "r", cogs=2)
     html = render(run_dir).read_text()
@@ -1309,7 +1309,7 @@ def test_inventory_panel_uses_agent_color(tmp_path: Path) -> None:
 
 
 def test_inventory_panel_emits_heartbeat_lookup_table(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     events = [
         {"step": 200, "agent": 0, "stream": "py", "type": "heartbeat",
@@ -1341,7 +1341,7 @@ def test_inventory_panel_emits_heartbeat_lookup_table(tmp_path: Path) -> None:
 
 
 def test_inventory_panel_sits_above_log(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "r", cogs=2)
     html = render(run_dir).read_text()
@@ -1350,7 +1350,7 @@ def test_inventory_panel_sits_above_log(tmp_path: Path) -> None:
 
 
 def test_inventory_panel_has_css_class(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "r", cogs=2)
     html = render(run_dir).read_text()
@@ -1364,7 +1364,7 @@ def test_inventory_panel_has_css_class(tmp_path: Path) -> None:
 
 
 def test_inventory_panel_js_updates_on_set_step(tmp_path: Path) -> None:
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     run_dir = _write_fake_run(tmp_path / "r", cogs=2)
     html = render(run_dir).read_text()
@@ -1376,7 +1376,7 @@ def test_inventory_panel_js_updates_on_set_step(tmp_path: Path) -> None:
 def test_render_groups_agents_by_team(tmp_path: Path) -> None:
     """Inventory panel should emit one .team-block per unique team id,
     each containing the .inv-rows for that team's agents."""
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     events = [
         {"step": 1, "agent": 0, "stream": "py", "type": "inventory",
@@ -1411,7 +1411,7 @@ def test_render_groups_agents_by_team(tmp_path: Path) -> None:
 def test_team_header_js_populates_from_team_by_step(tmp_path: Path) -> None:
     """The `team-by-step` script island is emitted and updateInventoryPanel
     reads it to render the per-team header."""
-    from cvc_policy.viewer import render
+    from cogony_policy.viewer import render
 
     events = [
         {"step": 10, "agent": 0, "stream": "py", "type": "inventory",

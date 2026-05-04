@@ -5,8 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from cvc_policy.scenarios._run import Run
-from cvc_policy.scenarios.assertions import (
+from cogony_policy.scenarios._run import Run
+from cogony_policy.scenarios.assertions import (
     AssertResult,
     after_heavy_trip_switches_target,
     cap_discovered_by,
@@ -22,7 +22,7 @@ def test_unused_assertion_helpers_are_gone() -> None:
     """map_coverage_at_least and extractors_known_at_least were dead
     weight backed by misleading fields; removed so they can't lock
     the events.json schema."""
-    import cvc_policy.scenarios.assertions as mod
+    import cogony_policy.scenarios.assertions as mod
 
     assert not hasattr(mod, "map_coverage_at_least")
     assert not hasattr(mod, "extractors_known_at_least")

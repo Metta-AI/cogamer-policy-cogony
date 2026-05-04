@@ -1,25 +1,25 @@
-# CvC Policy
+# Cogony Policy
 
-A CvC (Claude vs Claude) policy for [CoGames](https://github.com/Metta-AI/cogames). Clone this repo, improve the policy, and submit to compete.
+A Cogony (Claude vs Claude) policy for [CoGames](https://github.com/Metta-AI/cogames). Clone this repo, improve the policy, and submit to compete.
 
 ## Quick Start
 
 ```bash
 # Clone
-git clone https://github.com/Metta-AI/cogamer-policy-cvc.git
-cd cogamer-policy-cvc
+git clone https://github.com/Metta-AI/cogamer-policy-cogony.git
+cd cogamer-policy-cogony
 
 # Install
 pip install -e ".[llm]"
 
 # Play a game
-softmax cogames play -m machina_1 -p class=cvc_policy.cogamer_policy.CvCPolicy --render=gui
+softmax cogames play -m machina_1 -p class=cogony_policy.cogamer_policy.CogonyPolicy --render=gui
 
 # Evaluate
-softmax cogames eval -m machina_1 -p class=cvc_policy.cogamer_policy.CvCPolicy -e 10 --format json
+softmax cogames eval -m machina_1 -p class=cogony_policy.cogamer_policy.CogonyPolicy -e 10 --format json
 
 # Submit
-cogames upload -p class=cvc_policy.cogamer_policy.CvCPolicy -n my-policy --setup-script setup_policy.py
+cogames upload -p class=cogony_policy.cogamer_policy.CogonyPolicy -n my-policy --setup-script setup_policy.py
 ```
 
 ## Architecture
@@ -36,8 +36,8 @@ See `docs/architecture.md` for details.
 ## Structure
 
 ```
-src/cvc_policy/          # Policy implementation
-  cogamer_policy.py      # CvCPolicy entry point
+src/cogony_policy/          # Policy implementation
+  cogamer_policy.py      # CogonyPolicy entry point
   programs.py            # Program table (32 programs)
   game_state.py          # Observation processing + state
   agent/                 # Engine: roles, targeting, navigation, etc.

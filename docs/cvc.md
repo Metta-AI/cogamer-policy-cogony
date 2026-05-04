@@ -1,4 +1,4 @@
-# CvC Agent Architecture & Game Rules
+# Cogony Agent Architecture & Game Rules
 
 See `cogamer/IDENTITY.md` for this cogamer's name, personality, and strategic philosophy.
 
@@ -63,9 +63,9 @@ EXTRACTOR_MEMORY = 600 steps
 
 ### Policy Stack (StatefulPolicyImpl pattern)
 ```
-CvCPolicy (MultiAgentPolicy)
-  └─ StatefulAgentPolicy[CvCAgentState]  ← framework-managed, one per agent
-       └─ CvCPolicyImpl (StatefulPolicyImpl[CvCAgentState])
+CogonyPolicy (MultiAgentPolicy)
+  └─ StatefulAgentPolicy[CogonyAgentState]  ← framework-managed, one per agent
+       └─ CogonyPolicyImpl (StatefulPolicyImpl[CogonyAgentState])
             ├─ CvCAgentPolicy (heuristic engine)
             ├─ LLM brain (periodic Claude calls → resource_bias)
             └─ Snapshot logging (periodic state capture)
@@ -76,11 +76,11 @@ This follows the official cogames agent pattern (see `cogames-agents/docs/creati
 - **`StatefulPolicyImpl[S]`**: Per-agent logic, implements `step_with_state(obs, state) -> (Action, state)`
 - **`StatefulAgentPolicy[S]`**: Framework glue, wraps impl into AgentPolicy with state lifecycle
 
-### CvCAgentState (dataclass)
+### CogonyAgentState (dataclass)
 All per-agent mutable state:
 ```python
 @dataclass
-class CvCAgentState:
+class CogonyAgentState:
     engine: CvCAgentPolicy | None   # Heuristic engine (holds own internal state)
     last_llm_step: int                  # Step of last LLM call
     llm_interval: int                   # Steps between LLM calls (adaptive)
@@ -91,7 +91,7 @@ class CvCAgentState:
     last_snapshot_step: int             # Step of last snapshot
 ```
 
-### CvCPolicyImpl (StatefulPolicyImpl)
+### CogonyPolicyImpl (StatefulPolicyImpl)
 Per-agent decision logic:
 1. Sets `engine._llm_resource_bias` from state (LLM guidance)
 2. Calls `engine.step(obs)` → action (heuristic fast path)
@@ -100,7 +100,7 @@ Per-agent decision logic:
 
 ### CvCAgentPolicy (heuristic engine)
 Extends `CvcEngine` with:
-- `_llm_resource_bias` attribute: set by CvCPolicyImpl, used in `_macro_directive()`
+- `_llm_resource_bias` attribute: set by CogonyPolicyImpl, used in `_macro_directive()`
 - `_macro_directive()`: returns LLM bias if set, else least-available resource
 - `_pressure_budgets()`: phase-based aligner/scrambler allocation
 - `_should_retreat()`: extra safety for miners far from hub
@@ -108,7 +108,7 @@ Extends `CvcEngine` with:
 ### File Layout
 ```
 cvc/
-├── cogamer_policy.py          # CvCPolicy + CvCPolicyImpl + CvCAgentState + LLM brain
+├── cogamer_policy.py          # CogonyPolicy + CogonyPolicyImpl + CogonyAgentState + LLM brain
 ├── programs.py                # Flat program table (all 32 programs)
 ├── game_state.py              # GameState adapter wrapping CogletAgentPolicy
 └── agent/
@@ -132,7 +132,7 @@ cvc/
 ```
 
 ### Per-Agent Decision Loop
-Each step, CvCPolicyImpl.step_with_state():
+Each step, CogonyPolicyImpl.step_with_state():
 1. Set `engine._llm_resource_bias` from LLM state
 2. `engine.step(obs)` → action (heuristic engine handles everything)
 3. If LLM interval reached → call Claude for new `resource_bias`
@@ -183,13 +183,13 @@ step >= 300: aligners=4, scramblers=1  (sustained play)
 
 ```bash
 # Play locally (with LLM if ANTHROPIC_API_KEY is set)
-cogames play -m machina_1 -p class=cvc.cogamer_policy.CvCPolicy -c 8 --seed 42 -r none
+cogames play -m machina_1 -p class=cvc.cogamer_policy.CogonyPolicy -c 8 --seed 42 -r none
 
 # Play without LLM (unset API key)
-ANTHROPIC_API_KEY= cogames play -m machina_1 -p class=cvc.cogamer_policy.CvCPolicy -c 8 --seed 42 -r none
+ANTHROPIC_API_KEY= cogames play -m machina_1 -p class=cvc.cogamer_policy.CogonyPolicy -c 8 --seed 42 -r none
 
 # Upload to tournament
-cogames upload -p class=cvc.cogamer_policy.CvCPolicy -n coglet-v0 \
+cogames upload -p class=cvc.cogamer_policy.CogonyPolicy -n coglet-v0 \
   -f cvc -f setup_policy.py \
   --setup-script setup_policy.py --season beta-cvc \
   --secret-env "COGORA_ANTHROPIC_KEY=..."

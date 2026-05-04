@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from cvc_policy.agent.world_model import WorldModel
+from cogony_policy.agent.world_model import WorldModel
 
 
 def test_empty_world_model_summary() -> None:

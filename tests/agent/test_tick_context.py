@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from cvc_policy.agent.tick_context import build_tick_context, teammate_aligner_positions
-from cvc_policy.agent.world_model import WorldModel
+from cogony_policy.agent.tick_context import build_tick_context, teammate_aligner_positions
+from cogony_policy.agent.world_model import WorldModel
 
 
 class TestTeammateAlignerPositions:

@@ -1,10 +1,10 @@
-"""Focused behavior tests for cvc.agent.resources helpers."""
+"""Focused behavior tests for cogony_policy.agent.resources helpers."""
 
 from __future__ import annotations
 
 import pytest
 
-from cvc_policy.agent.resources import (
+from cogony_policy.agent.resources import (
     absolute_position,
     attr_int,
     attr_str,
@@ -25,7 +25,7 @@ from cvc_policy.agent.resources import (
     team_id,
     team_min_resource,
 )
-from cvc_policy.agent.types import (
+from cogony_policy.agent.types import (
     ELEMENTS,
     _EMERGENCY_RESOURCE_LOW,
     GEAR_COSTS,

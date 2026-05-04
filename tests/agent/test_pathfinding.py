@@ -1,8 +1,8 @@
-"""Tests for cvc.agent.pathfinding."""
+"""Tests for cogony_policy.agent.pathfinding."""
 
 from __future__ import annotations
 
-from cvc_policy.agent.pathfinding import (
+from cogony_policy.agent.pathfinding import (
     NavigationObservation,
     astar_next_step,
     detect_extractor_oscillation,

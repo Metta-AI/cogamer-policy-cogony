@@ -2,7 +2,7 @@
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Land an end-to-end diagnostic framework for the CvC policy:
+**Goal:** Land an end-to-end diagnostic framework for the Cogony policy:
 structured event recording, a standalone `cgp` CLI, programmatic
 scenarios with pass/fail assertions, a static HTML replay+logs
 viewer, and a coverage audit with CI gate.
@@ -40,14 +40,14 @@ implementation → verify pass → commit.
 ## Task 1.1: EventRecorder skeleton + test harness
 
 **Files:**
-- Create: `src/cvc_policy/recorder.py`
+- Create: `src/cogony_policy/recorder.py`
 - Create: `tests/test_recorder.py`
 
 **Step 1: Write the failing test**
 
 ```python
 # tests/test_recorder.py
-from cvc_policy.recorder import EventRecorder
+from cogony_policy.recorder import EventRecorder
 
 
 def test_emit_appends_event_with_step_and_stream():
@@ -70,13 +70,13 @@ def test_emit_without_step_defaults_to_zero():
 
 ```bash
 .venv/bin/pytest tests/test_recorder.py -v
-# Expected: ModuleNotFoundError: cvc_policy.recorder
+# Expected: ModuleNotFoundError: cogony_policy.recorder
 ```
 
 **Step 3: Minimal implementation**
 
 ```python
-# src/cvc_policy/recorder.py
+# src/cogony_policy/recorder.py
 from __future__ import annotations
 from typing import Any
 
@@ -106,7 +106,7 @@ class EventRecorder:
 **Step 5: Commit**
 
 ```bash
-git add src/cvc_policy/recorder.py tests/test_recorder.py
+git add src/cogony_policy/recorder.py tests/test_recorder.py
 git commit -m "recorder: EventRecorder skeleton"
 ```
 
@@ -115,13 +115,13 @@ git commit -m "recorder: EventRecorder skeleton"
 ## Task 1.2: `fmt(event)` — one-liner renderer
 
 **Files:**
-- Modify: `src/cvc_policy/recorder.py`
+- Modify: `src/cogony_policy/recorder.py`
 - Modify: `tests/test_recorder.py`
 
 **Step 1: Failing test**
 
 ```python
-from cvc_policy.recorder import fmt
+from cogony_policy.recorder import fmt
 
 
 def test_fmt_action_event():
@@ -159,7 +159,7 @@ payload keys, string values quoted if they contain whitespace.**
 ## Task 1.3: Sinks — stderr + `events.json` + `policyInfos`
 
 **Files:**
-- Modify: `src/cvc_policy/recorder.py`
+- Modify: `src/cogony_policy/recorder.py`
 - Modify: `tests/test_recorder.py`
 
 **Step 1: Failing tests**
@@ -212,23 +212,23 @@ def test_per_step_drain_returns_events_for_current_step():
 ## Task 1.4: Recorder factory per policy; retire LogConfig
 
 **Files:**
-- Modify: `src/cvc_policy/cogamer_policy.py`
-- Modify: `src/cvc_policy/logcfg.py` (delete)
-- Modify: `src/cvc_policy/llm_worker.py` (LogConfig → EventRecorder)
+- Modify: `src/cogony_policy/cogamer_policy.py`
+- Modify: `src/cogony_policy/logcfg.py` (delete)
+- Modify: `src/cogony_policy/llm_worker.py` (LogConfig → EventRecorder)
 - Modify: `tests/agent/test_world_model.py` (remove debug if any)
 
 **Step 1: Failing test** — add `tests/test_cogamer_policy_kwargs.py` for recorder init:
 
 ```python
-def test_cvc_policy_record_dir_kwarg_creates_recorder(tmp_path, monkeypatch):
-    from cvc_policy.cogamer_policy import CvCPolicy
+def test_cogony_policy_record_dir_kwarg_creates_recorder(tmp_path, monkeypatch):
+    from cogony_policy.cogamer_policy import CogonyPolicy
     monkeypatch.setenv("ANTHROPIC_API_KEY", "")  # no-op; keeps LLM off
-    p = CvCPolicy(_fake_policy_env_info(), record_dir=str(tmp_path))
+    p = CogonyPolicy(_fake_policy_env_info(), record_dir=str(tmp_path))
     assert p._recorder is not None
     assert p._recorder._record_dir == str(tmp_path)
 
-def test_cvc_policy_log_py_enables_stderr(capsys):
-    p = CvCPolicy(_fake_policy_env_info(), log_py=True)
+def test_cogony_policy_log_py_enables_stderr(capsys):
+    p = CogonyPolicy(_fake_policy_env_info(), log_py=True)
     p._recorder.emit(type="note", agent=None, stream="py", payload={"text":"hi"})
     assert "[py]" in capsys.readouterr().err
 ```
@@ -239,11 +239,11 @@ def test_cvc_policy_log_py_enables_stderr(capsys):
 
 **Step 3: Replace LogConfig usage in `cogamer_policy.py`:**
 - Import `EventRecorder`.
-- In `CvCPolicy.__init__`: replace `self._log = LogConfig(...)` with
+- In `CogonyPolicy.__init__`: replace `self._log = LogConfig(...)` with
   `self._recorder = EventRecorder(stderr_streams=_derive_streams(log, log_py, log_llm), record_dir=record_dir)`.
 - Delete `logcfg.py`. Delete `_truthy` helper from cogamer_policy (move into recorder if still needed, or inline).
 - Replace `LogConfig` references in `llm_worker.py` with `EventRecorder`.
-- Update `CvCPolicyImpl.__init__` to accept `recorder: EventRecorder`.
+- Update `CogonyPolicyImpl.__init__` to accept `recorder: EventRecorder`.
 
 **Step 4: Verify all existing tests still pass**
 
@@ -258,7 +258,7 @@ def test_cvc_policy_log_py_enables_stderr(capsys):
 ## Task 1.5: Instrument `step_with_state` → `action` and `role_change` events
 
 **Files:**
-- Modify: `src/cvc_policy/cogamer_policy.py`
+- Modify: `src/cogony_policy/cogamer_policy.py`
 - Modify: `tests/test_recorder_integration.py` (new)
 
 **Step 1: Failing test**
@@ -299,8 +299,8 @@ def test_role_change_event_fires_on_transition():
 ## Task 1.6: Instrument `cap_discovered`
 
 **Files:**
-- Modify: `src/cvc_policy/agent/cargo_cap.py` (accept optional `on_discovery: Callable[[sig, cap], None]`)
-- Modify: `src/cvc_policy/game_state.py` (wire recorder callback into tracker)
+- Modify: `src/cogony_policy/agent/cargo_cap.py` (accept optional `on_discovery: Callable[[sig, cap], None]`)
+- Modify: `src/cogony_policy/game_state.py` (wire recorder callback into tracker)
 - Modify: `tests/agent/test_cargo_cap.py` (callback test)
 
 **Step 1: Failing test**
@@ -330,8 +330,8 @@ plateaus). In `game_state.py`, when engine is constructed, pass
 ## Task 1.7: Instrument `target` and `heartbeat`
 
 **Files:**
-- Modify: `src/cvc_policy/agent/roles.py` (or `targeting.py`) — emit `target` when a role picks a concrete entity
-- Modify: `src/cvc_policy/cogamer_policy.py` — emit `heartbeat` on existing cadence
+- Modify: `src/cogony_policy/agent/roles.py` (or `targeting.py`) — emit `target` when a role picks a concrete entity
+- Modify: `src/cogony_policy/cogamer_policy.py` — emit `heartbeat` on existing cadence
 - Modify: `tests/test_recorder_integration.py`
 
 **Step 1: Failing tests**
@@ -363,7 +363,7 @@ def test_heartbeat_every_N_steps():
 ## Task 1.8: Instrument `llm_tool_call` and `patch_applied`
 
 **Files:**
-- Modify: `src/cvc_policy/llm_worker.py`
+- Modify: `src/cogony_policy/llm_worker.py`
 - Modify: `tests/test_llm_worker.py` (new file)
 
 **Step 1: Failing test**
@@ -391,7 +391,7 @@ Use a FakeAnthropicClient that returns scripted responses — mocks not required
 ## Task 1.9: Wire recorder events to `policyInfos`
 
 **Files:**
-- Modify: `src/cvc_policy/cogamer_policy.py` — in `step_with_state`, after emitting events for the tick, copy `recorder.events_for_step(step)` into `self._infos` (per-agent dict key stored via StatefulAgentPolicy).
+- Modify: `src/cogony_policy/cogamer_policy.py` — in `step_with_state`, after emitting events for the tick, copy `recorder.events_for_step(step)` into `self._infos` (per-agent dict key stored via StatefulAgentPolicy).
 - Modify: `tests/test_recorder_integration.py` — assert `_infos` is populated.
 
 **Step 1: Failing test**
@@ -413,14 +413,14 @@ Commit: `recorder: surface per-tick events via policyInfos`
 ## Task 1.10: Record-dir wiring + episode-end flush
 
 **Files:**
-- Modify: `src/cvc_policy/cogamer_policy.py` — `record_dir` kwarg triggers `recorder.flush_json(record_dir / "events.json")` in `_on_episode_end`.
+- Modify: `src/cogony_policy/cogamer_policy.py` — `record_dir` kwarg triggers `recorder.flush_json(record_dir / "events.json")` in `_on_episode_end`.
 - Modify: `tests/test_cogamer_policy_kwargs.py`
 
 **Step 1: Failing test**
 
 ```python
 def test_record_dir_writes_events_json(tmp_path, ...):
-    p = CvCPolicy(_fake_policy_env_info(), record_dir=str(tmp_path))
+    p = CogonyPolicy(_fake_policy_env_info(), record_dir=str(tmp_path))
     p._recorder.emit(type="note", agent=None, stream="py", payload={"text":"x"})
     p._on_episode_end()
     assert (tmp_path / "events.json").exists()
@@ -445,15 +445,15 @@ All 429+ tests pass plus new ones. Push and review before Batch 2.
 ## Task 2.1: Create `cgp` CLI entry point
 
 **Files:**
-- Create: `src/cvc_policy/cli.py`
-- Modify: `pyproject.toml` — add `[project.scripts] cgp = "cvc_policy.cli:app"`
+- Create: `src/cogony_policy/cli.py`
+- Modify: `pyproject.toml` — add `[project.scripts] cgp = "cogony_policy.cli:app"`
 - Create: `tests/test_cli.py`
 
 **Step 1: Failing test**
 
 ```python
 from typer.testing import CliRunner
-from cvc_policy.cli import app
+from cogony_policy.cli import app
 
 
 def test_cli_exists_with_help():
@@ -476,13 +476,13 @@ Commit: `cli: cgp skeleton with subcommand groups`
 ## Task 2.2: Scenario dataclass + registry
 
 **Files:**
-- Create: `src/cvc_policy/scenarios/__init__.py` (exports `Scenario`, `scenario` decorator, `registry()`)
+- Create: `src/cogony_policy/scenarios/__init__.py` (exports `Scenario`, `scenario` decorator, `registry()`)
 - Create: `tests/test_scenarios_registry.py`
 
 **Step 1: Failing test**
 
 ```python
-from cvc_policy.scenarios import Scenario, scenario, registry
+from cogony_policy.scenarios import Scenario, scenario, registry
 
 
 def test_decorator_registers_scenario_by_name():
@@ -503,7 +503,7 @@ def test_list_sorted_by_tier_then_name():
 ## Task 2.3: `Run` typed view
 
 **Files:**
-- Create: `src/cvc_policy/scenarios/_run.py`
+- Create: `src/cogony_policy/scenarios/_run.py`
 - Create: `tests/test_scenarios_run.py`
 
 **Step 1: Failing test**
@@ -522,7 +522,7 @@ Write tests that build a fake run folder (events.json + result.json), load `Run(
 ## Task 2.4: Assertion helpers
 
 **Files:**
-- Create: `src/cvc_policy/scenarios/assertions.py`
+- Create: `src/cogony_policy/scenarios/assertions.py`
 - Create: `tests/test_scenarios_assertions.py`
 
 Assertion helpers (return `AssertResult` dataclass with `name`, `passed`, `message`, `failed_at_step`):
@@ -540,7 +540,7 @@ TDD one at a time. Commit after each helper + its test.
 ## Task 2.5: Harness — drive the game via library
 
 **Files:**
-- Create: `src/cvc_policy/scenarios/harness.py`
+- Create: `src/cogony_policy/scenarios/harness.py`
 - Create: `tests/test_scenarios_harness.py`
 
 Harness steps:
@@ -569,7 +569,7 @@ def run_scenario(s: Scenario, *, steps_override: int | None = None) -> Run:
         s.setup(env)
 
     # policy
-    policy = CvCPolicy(
+    policy = CogonyPolicy(
         env.policy_env_info(), record_dir=str(run_dir),
         **s.policy_kwargs,
     )
@@ -594,7 +594,7 @@ Commit: `scenarios: harness.run_scenario with mettagrid library driver`
 
 ## Task 2.6–2.10: Five scenarios (one task each)
 
-Each adds `src/cvc_policy/scenarios/cases/<name>.py` + a test that runs it and expects `status=passed`.
+Each adds `src/cogony_policy/scenarios/cases/<name>.py` + a test that runs it and expects `status=passed`.
 
 - 2.6: `smoke_machina1_runs`
 - 2.7: `exploration_small` (emit `world_model_summary` first — adjust recorder)
@@ -611,7 +611,7 @@ Commit per scenario.
 ## Task 2.11: `cgp scenario run` / `run-all` / `list` impl
 
 **Files:**
-- Modify: `src/cvc_policy/cli.py`
+- Modify: `src/cogony_policy/cli.py`
 - Modify: `tests/test_cli.py`
 
 TDD: invoke CLI, assert it creates `runs/<id>/` and prints pass/fail.
@@ -623,8 +623,8 @@ Commit: `cli: scenario subcommands`
 ## Task 2.12: `cgp play` with overrides
 
 **Files:**
-- Modify: `src/cvc_policy/cli.py`
-- Create: `src/cvc_policy/overrides.py` (parse `KEY=VALUE` / `VARIANT.KEY=VALUE` with type coercion int/float/bool/json/str)
+- Modify: `src/cogony_policy/cli.py`
+- Create: `src/cogony_policy/overrides.py` (parse `KEY=VALUE` / `VARIANT.KEY=VALUE` with type coercion int/float/bool/json/str)
 - Create: `tests/test_overrides.py`
 
 Tests for override parser:
@@ -654,8 +654,8 @@ Push and review.
 ## Task 3.1: `fmt` exported + viewer package skeleton
 
 **Files:**
-- Create: `src/cvc_policy/viewer/__init__.py`, `render.py`
-- Create: `src/cvc_policy/viewer/report.html.j2`
+- Create: `src/cogony_policy/viewer/__init__.py`, `render.py`
+- Create: `src/cogony_policy/viewer/report.html.j2`
 
 Test writes a tiny fake run folder → `render(run_dir) → report.html`.
 Assert resulting HTML has the run_id in the header and the event
@@ -723,7 +723,7 @@ Push.
 ## Task 4.1: Add pytest-cov, cgp test-cov
 
 Add `pytest-cov>=6` and `hypothesis>=6` to dev deps. Implement
-`cgp test-cov` that shells `pytest --cov=cvc_policy --cov-report=term-missing`.
+`cgp test-cov` that shells `pytest --cov=cogony_policy --cov-report=term-missing`.
 
 Commit: `dev: add pytest-cov + hypothesis`
 
@@ -741,10 +741,10 @@ Commit the audit doc.
 ## Tasks 4.3–4.6: Fill gaps per under-covered module
 
 One task per module, TDD. Modules to touch based on current suspicion:
-- `cvc_policy/agent/main.py`
-- `cvc_policy/agent/coglet_policy.py`
-- `cvc_policy/agent/navigation.py`
-- `cvc_policy/game_state.py`
+- `cogony_policy/agent/main.py`
+- `cogony_policy/agent/coglet_policy.py`
+- `cogony_policy/agent/navigation.py`
+- `cogony_policy/game_state.py`
 
 Each task: add tests to bring module to ≥85% line coverage; mark
 untestable glue with `# pragma: no cover` + one-line justification.
@@ -758,7 +758,7 @@ Add `.github/workflows/ci.yml` running:
 
 ```yaml
 - run: uv sync
-- run: uv run pytest --cov=cvc_policy --cov-fail-under=85
+- run: uv run pytest --cov=cogony_policy --cov-fail-under=85
 ```
 
 Commit: `ci: coverage gate at 85%`

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typer.testing import CliRunner
 
-from cvc_policy.cli import app
+from cogony_policy.cli import app
 
 
 def test_cli_help_lists_subcommands() -> None:
@@ -46,7 +46,7 @@ def test_test_cov_invokes_pytest_with_coverage(monkeypatch) -> None:
     assert len(calls) == 1
     cmd = calls[0]
     assert "pytest" in cmd
-    assert "--cov=cvc_policy" in cmd
+    assert "--cov=cogony_policy" in cmd
     assert "--cov-report=term-missing" in cmd
     assert "--cov-report=xml" in cmd
 
@@ -64,11 +64,11 @@ def test_test_cov_propagates_nonzero_exit(monkeypatch) -> None:
 
 def test_scenario_list_shows_registered_scenarios() -> None:
     # Load all 5 Batch 2 scenarios.
-    import cvc_policy.scenarios.cases.empty_extractor_skipped  # noqa: F401
-    import cvc_policy.scenarios.cases.exploration_small  # noqa: F401
-    import cvc_policy.scenarios.cases.mining_discovers_cap  # noqa: F401
-    import cvc_policy.scenarios.cases.mining_trip_efficiency  # noqa: F401
-    import cvc_policy.scenarios.cases.smoke  # noqa: F401
+    import cogony_policy.scenarios.cases.empty_extractor_skipped  # noqa: F401
+    import cogony_policy.scenarios.cases.exploration_small  # noqa: F401
+    import cogony_policy.scenarios.cases.mining_discovers_cap  # noqa: F401
+    import cogony_policy.scenarios.cases.mining_trip_efficiency  # noqa: F401
+    import cogony_policy.scenarios.cases.smoke  # noqa: F401
 
     result = CliRunner().invoke(app, ["scenario", "list"])
     assert result.exit_code == 0
@@ -84,9 +84,9 @@ def test_scenario_list_shows_registered_scenarios() -> None:
 
 def test_scenario_run_invokes_harness(tmp_path, monkeypatch) -> None:
     """scenario run <name> should call run_scenario with that name."""
-    import cvc_policy.scenarios.cases.smoke  # noqa: F401
-    from cvc_policy.scenarios._run import Run
-    import cvc_policy.cli as cli_mod
+    import cogony_policy.scenarios.cases.smoke  # noqa: F401
+    from cogony_policy.scenarios._run import Run
+    import cogony_policy.cli as cli_mod
 
     called = {}
 
@@ -112,9 +112,9 @@ def test_scenario_run_invokes_harness(tmp_path, monkeypatch) -> None:
 def test_scenario_run_prints_report_html_path(tmp_path, monkeypatch) -> None:
     """`cgp scenario run <name>` prints the path to report.html so the
     user can open it without a separate `cgp view` step."""
-    import cvc_policy.scenarios.cases.smoke  # noqa: F401
-    from cvc_policy.scenarios._run import Run
-    import cvc_policy.cli as cli_mod
+    import cogony_policy.scenarios.cases.smoke  # noqa: F401
+    from cogony_policy.scenarios._run import Run
+    import cogony_policy.cli as cli_mod
 
     def fake_run_scenario(scenario, **kwargs):
         run_dir = kwargs["runs_root"] / "fake-run"
@@ -143,8 +143,8 @@ def test_scenario_run_unknown_name_exits_nonzero(tmp_path) -> None:
 
 
 def test_play_builds_scenario_from_cli_args(tmp_path, monkeypatch) -> None:
-    from cvc_policy.scenarios._run import Run
-    import cvc_policy.cli as cli_mod
+    from cogony_policy.scenarios._run import Run
+    import cogony_policy.cli as cli_mod
 
     captured = {}
 
@@ -188,8 +188,8 @@ def test_play_builds_scenario_from_cli_args(tmp_path, monkeypatch) -> None:
 def test_play_tolerates_missing_duration_s(tmp_path, monkeypatch) -> None:
     """Old result.json files (or harness bugs) may lack duration_s;
     cgp play must not raise TypeError formatting a None."""
-    from cvc_policy.scenarios._run import Run
-    import cvc_policy.cli as cli_mod
+    from cogony_policy.scenarios._run import Run
+    import cogony_policy.cli as cli_mod
 
     def fake_run_scenario(scenario, **kwargs):
         run_dir = kwargs["runs_root"] / "nodur-run"
@@ -211,10 +211,10 @@ def test_play_tolerates_missing_duration_s(tmp_path, monkeypatch) -> None:
 
 
 def test_scenario_run_all_tier_filter(tmp_path, monkeypatch) -> None:
-    import cvc_policy.scenarios.cases.smoke  # noqa: F401
-    import cvc_policy.scenarios.cases.exploration_small  # noqa: F401
-    from cvc_policy.scenarios._run import Run
-    import cvc_policy.cli as cli_mod
+    import cogony_policy.scenarios.cases.smoke  # noqa: F401
+    import cogony_policy.scenarios.cases.exploration_small  # noqa: F401
+    from cogony_policy.scenarios._run import Run
+    import cogony_policy.cli as cli_mod
 
     ran: list[str] = []
 
@@ -242,9 +242,9 @@ def test_scenario_run_all_tier_filter(tmp_path, monkeypatch) -> None:
 
 
 def test_scenario_run_failed_exit_code(tmp_path, monkeypatch) -> None:
-    import cvc_policy.scenarios.cases.smoke  # noqa: F401
-    from cvc_policy.scenarios._run import Run
-    import cvc_policy.cli as cli_mod
+    import cogony_policy.scenarios.cases.smoke  # noqa: F401
+    from cogony_policy.scenarios._run import Run
+    import cogony_policy.cli as cli_mod
 
     def fake_run_scenario(scenario, **kwargs):
         run_dir = kwargs["runs_root"] / "failed"
@@ -266,9 +266,9 @@ def test_scenario_run_failed_exit_code(tmp_path, monkeypatch) -> None:
 
 
 def test_scenario_run_all_with_failures(tmp_path, monkeypatch) -> None:
-    import cvc_policy.scenarios.cases.smoke  # noqa: F401
-    from cvc_policy.scenarios._run import Run
-    import cvc_policy.cli as cli_mod
+    import cogony_policy.scenarios.cases.smoke  # noqa: F401
+    from cogony_policy.scenarios._run import Run
+    import cogony_policy.cli as cli_mod
 
     def fake_run_scenario(scenario, **kwargs):
         run_dir = kwargs["runs_root"] / f"fake-{scenario.name}"
@@ -344,8 +344,8 @@ def test_view_direct_path(tmp_path) -> None:
 
 
 def test_play_no_record_uses_tempdir(tmp_path, monkeypatch) -> None:
-    from cvc_policy.scenarios._run import Run
-    import cvc_policy.cli as cli_mod
+    from cogony_policy.scenarios._run import Run
+    import cogony_policy.cli as cli_mod
 
     def fake_run_scenario(scenario, **kwargs):
         run_dir = kwargs["runs_root"] / "play"
@@ -366,8 +366,8 @@ def test_play_no_record_uses_tempdir(tmp_path, monkeypatch) -> None:
 
 
 def test_play_with_variant_override(tmp_path, monkeypatch) -> None:
-    from cvc_policy.scenarios._run import Run
-    import cvc_policy.cli as cli_mod
+    from cogony_policy.scenarios._run import Run
+    import cogony_policy.cli as cli_mod
 
     captured = {}
 
@@ -396,7 +396,7 @@ def test_play_with_variant_override(tmp_path, monkeypatch) -> None:
 
 def test_scenario_list_empty_registry(monkeypatch) -> None:
     """Cover the (no scenarios registered) branch."""
-    import cvc_policy.cli as cli_mod
+    import cogony_policy.cli as cli_mod
 
     monkeypatch.setattr(cli_mod, "registry", lambda: {})
     # Skip loading scenarios so registry stays empty for this call.

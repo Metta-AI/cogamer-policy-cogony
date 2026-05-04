@@ -1,4 +1,4 @@
-"""Shared test fixtures for cvc_policy tests."""
+"""Shared test fixtures for cogony_policy tests."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from typing import Any
 
 import pytest
 
-from cvc_policy.agent.types import ELEMENTS, KnownEntity
+from cogony_policy.agent.types import ELEMENTS, KnownEntity
 from mettagrid.policy.policy_env_interface import PolicyEnvInterface
 from mettagrid.sdk.agent import (
     GridPosition,
@@ -20,7 +20,7 @@ _SENTINEL = object()
 
 
 def _fake_policy_env_info(num_agents: int = 1) -> PolicyEnvInterface:
-    """Minimal PolicyEnvInterface for tests that construct CvCPolicy directly."""
+    """Minimal PolicyEnvInterface for tests that construct CogonyPolicy directly."""
     return PolicyEnvInterface(
         action_names=["noop", "move_north", "move_south", "move_east", "move_west"],
         vibe_action_names=["change_vibe_default"],

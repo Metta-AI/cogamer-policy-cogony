@@ -3,9 +3,9 @@ requires = ["setuptools>=70.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "cvc-policy"
+name = "cogony-policy"
 version = "0.1.0"
-description = "CvC policy for CoGames — clone, improve, submit"
+description = "Cogony policy for CoGames — clone, improve, submit"
 requires-python = ">=3.12"
 dependencies = [
   "mettagrid",
@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.scripts]
-cgp = "cvc_policy.cli:app"
+cgp = "cogony_policy.cli:app"
 
 [project.optional-dependencies]
 llm = ["anthropic>=0.64.0"]
@@ -39,9 +39,9 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["cvc_policy"]
+source = ["cogony_policy"]
 omit = [
-  "src/cvc_policy/setup_policy.py",
+  "src/cogony_policy/setup_policy.py",
 ]
 
 [tool.uv.sources]

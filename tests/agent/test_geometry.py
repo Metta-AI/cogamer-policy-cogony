@@ -1,8 +1,8 @@
-"""Tests for cvc.agent.geometry."""
+"""Tests for cogony_policy.agent.geometry."""
 
 import pytest
 
-from cvc_policy.agent.geometry import (
+from cogony_policy.agent.geometry import (
     direction_from_step,
     explore_offsets,
     format_position,
